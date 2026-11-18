@@ -1,0 +1,27 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: madi-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: madi_db
+      POSTGRES_USER: madi_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-madi_dev_password}
+
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    volumes:
+      - madi_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U madi_user -d madi_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  madi_postgres_data:
